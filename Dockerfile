@@ -1,19 +1,18 @@
 FROM python:3-alpine
 
-ENV REPO_DIR=/data
-
-RUN apk add --update --no-cache openssh ansible \
- && ansible-galaxy collection install community.general vyos.vyos
+RUN apk add --update --no-cache openssh-client gcc musl-dev libssh-dev bash git \
+ && python3 -m pip install ansible==6.6.0 pyyaml ansible-pylibssh requests aggregate_prefixes \
+ && ansible-galaxy collection install community.general
 
 # switch to non privileged user
-ENV HOME=/home/worker
-RUN mkdir -p ${HOME} \
+RUN mkdir -p /home/worker \
  && addgroup -S worker \
  && adduser -S worker -G worker
-WORKDIR ${HOME}
+WORKDIR /home/worker
 USER worker
 
-COPY --chown=worker:worker . ${HOME}
+COPY --chown=worker:worker . /home/worker
+
 RUN find /home/worker -name '*.sh' -exec chmod +x {} \;
 
-ENTRYPOINT ["/bin/sh", "/home/worker/entrypoint.sh"]
+ENTRYPOINT ["/bin/bash", "/home/worker/entrypoint.sh"]
