@@ -12,8 +12,6 @@
 #trap 'echo sigquit' SIGQUIT
 #trap 'echo sigterm' SIGTERM
 
-sleep 100
-
 source /home/worker/.functions.sh
 
 # first we are going to save the contents of SSH_KEY as valid ssh key
