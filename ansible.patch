@@ -1,0 +1,11 @@
+--- /usr/local/lib/python3.11/site-packages/ansible_collections/vyos/vyos/plugins/module_utils/network/vyos/facts/firewall_rules/firewall_rules.py	2022-12-06 22:39:16.158044387 +0100
++++ /usr/local/lib/python3.11/site-packages/ansible_collections/vyos/vyos/plugins/module_utils/network/vyos/facts/firewall_rules/firewall_rules.py	2022-12-06 22:39:48.281899947 +0100
+@@ -59,6 +59,8 @@
+             data = self.get_device_data(connection)
+         # split the config into instances of the resource
+         objs = []
++        if "\x1b[m" in data:
++            data = data.replace("\x1b[m", "")
+         v6_rules = findall(
+             r"^set firewall ipv6-name (?:\'*)(\S+)(?:\'*)", data, M
+         )
